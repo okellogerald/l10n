@@ -1,0 +1,1 @@
+Making it possible to divide translations into subfolders instead of having one big translation file.

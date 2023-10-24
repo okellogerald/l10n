@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	list "github.com/okellogerald/l10n.git/utils"
+	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
 )
 
 func getAllFoldersFrom(path string) ([]string, error) {
@@ -109,9 +109,7 @@ func readARBFile(filePath string) ([]byte, error) {
 	return data, nil
 }
 
-type ARBData map[string]interface{}
-
-func writeARBFile(filename string, data ARBData) error {
+func writeARBFile(filename string, data ARBEntry) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -131,22 +129,6 @@ func writeARBFile(filename string, data ARBData) error {
 	return nil
 }
 
-func mergeARBData(data1, data2 ARBData) ARBData {
-	mergedData := make(ARBData)
-
-	// Copy data from data1 to mergedData
-	for key, value := range data1 {
-		mergedData[key] = value
-	}
-
-	// Merge data from data2 into mergedData
-	for key, value := range data2 {
-		mergedData[key] = value
-	}
-
-	return mergedData
-}
-
 func getLocaleFromFile(filePath string) (string, error) {
 	fileName := path.Base(filePath)
 	locale, found := strings.CutSuffix(fileName, ".arb")
@@ -162,9 +144,33 @@ func getLocaleFromFile(filePath string) (string, error) {
 	return locales[index], nil
 }
 
+func convertMapToARBData(data map[string]interface{}) ARBData {
+	list := make(ARBData, 0)
+
+	for k, v := range data {
+		list = append(list, ARBEntry{
+			key:   k,
+			value: v,
+		})
+	}
+
+	return list
+}
+
+func convertARBDataToMap(data ARBData) map[string]interface{} {
+	result := make(map[string]interface{})
+
+	for i := 0; i < len(data); i++ {
+		result[data[i].key] = data[i].value
+	}
+
+	return result
+}
+
 func writeARB(data ARBData, filePath string) error {
+	arbMap := convertARBDataToMap(data)
 	// Convert the ARBData map to JSON
-	jsonData, err := json.MarshalIndent(data, "", "  ")
+	jsonData, err := json.MarshalIndent(arbMap, "", "  ")
 	if err != nil {
 		return err
 	}

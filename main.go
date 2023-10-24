@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+
+	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
 )
 
 func main() {
+	deleteSampleFiles()
+
 	folders, err := getAllFoldersFrom(from)
 	handleError(err)
 
@@ -38,38 +43,37 @@ func main() {
 			rootContent, err := readARBFile(rootContentPath)
 			handleError(err)
 
-
-			println("--------------------")
-			println("before merge:")
-			println(string(content))
-			println(string(rootContent))
-
-			var parsedData1 ARBData
-			err = json.Unmarshal([]byte(content), &parsedData1)
+			var parsedData1 map[string]interface{}
+			err = json.Unmarshal([]byte(rootContent), &parsedData1)
 			if err != nil {
 				fmt.Println("Error parsing ARB file 1:", err)
 				return
 			}
 
-			var parsedData2 ARBData
-			err = json.Unmarshal([]byte(rootContent), &parsedData2)
+			var parsedData2 map[string]interface{}
+			err = json.Unmarshal([]byte(content), &parsedData2)
 			if err != nil {
 				fmt.Println("Error parsing ARB file 2:", err)
 				return
 			}
 
-			mergedData := mergeARBData(parsedData1, parsedData2)
+			list1 := convertMapToARBData(parsedData1)
+			list2 := convertMapToARBData(parsedData2)
+			mergedData := list.Combine(list1, list2)
 
-			println("--------------------")
-			println("after merge:")
-			println(fmt.Sprintf("%v", mergedData))
-			println("--------------------")
-
-			to := fmt.Sprintf("%v/sample_output_%v.arb", from, locale)
+			to := fmt.Sprintf("%v/app_%v.arb", from, locale)
 			err = writeARB(mergedData, to)
 			handleError(err)
 		}
 	}
+}
+
+func deleteSampleFiles() {
+	sampleFile1 := fmt.Sprintf("%v/sample_output_en.arb", from)
+	sampleFile2 := fmt.Sprintf("%v/sample_output_sw.arb", from)
+
+	os.Remove(sampleFile1)
+	os.Remove(sampleFile2)
 }
 
 func handleError(err error) {

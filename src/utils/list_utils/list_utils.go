@@ -20,3 +20,11 @@ func IndexOf[T comparable](item T, from []T) int {
 
 	return index;
 }
+
+func Combine[T comparable](list1 []T, list2 []T) []T {
+	result := make([]T, len(list1))
+	copy(result, list1)
+
+	result = append(result, list2...)
+	return result
+}

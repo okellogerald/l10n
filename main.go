@@ -6,6 +6,10 @@ import (
 )
 
 func main() {
-	app.JoinTranslations()
+	err := app.JoinTranslations()
+	if err != nil {
+		panic(err)
+	}
+
 	flutter.PubGet()
 }

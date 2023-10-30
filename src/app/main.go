@@ -11,7 +11,7 @@ import (
 
 func JoinTranslations() error {
 	for i := 0; i < len(locales); i++ {
-		path := fmt.Sprintf("%v/app_%v.arb", from, locales[i])
+		path := fmt.Sprintf("%v/app_%v.arb", FROM, locales[i])
 		println(path)
 		err := deleteFileContents(path)
 		if err != nil {
@@ -19,13 +19,13 @@ func JoinTranslations() error {
 		}
 	}
 
-	folders, err := getAllFoldersFrom(from)
+	folders, err := getAllFoldersFrom(FROM)
 	if err != nil {
 		return err
 	}
 
 	// root folder
-	hasAllLocales := checkIfRootFolderHasAllSpecifiedLocales(from)
+	hasAllLocales := checkIfRootFolderHasAllSpecifiedLocales(FROM)
 	if !hasAllLocales {
 		notIncludedAllLocalesError := errors.New("Please make sure you have included all locales translations in root folders")
 		if err != nil {
@@ -48,7 +48,7 @@ func JoinTranslations() error {
 		}
 
 		for i := 0; i < len(files); i++ {
-			content, err := readARBFile(files[i])
+			content, err := ReadARBFile(files[i])
 			if err != nil {
 				return err
 			}
@@ -58,18 +58,15 @@ func JoinTranslations() error {
 				return err
 			}
 
-			rootContentPath := fmt.Sprintf("%v/app_%v.arb", from, locale)
-			rootContent, err := readARBFile(rootContentPath)
+			rootContentPath := fmt.Sprintf("%v/app_%v.arb", FROM, locale)
+			rootContent, err := ReadARBFile(rootContentPath)
 			if err != nil {
 				return err
 			}
 
-			mergedData, err := mergeContents(rootContent, content)
-			if err != nil {
-				return err
-			}
-			
-			to := fmt.Sprintf("%v/app_%v.arb", from, locale)
+			mergedData := maputils.Combine[string, interface{}](rootContent, content)
+
+			to := fmt.Sprintf("%v/app_%v.arb", FROM, locale)
 			if err := writeARB(mergedData, to); err != nil {
 				return err
 			}
@@ -77,17 +74,6 @@ func JoinTranslations() error {
 	}
 
 	return nil
-}
-
-func mergeContents(b1, b2 []byte) (ARBData, error) {
-	data1, err := getMappedTranslationsFrom(b1)
-	data2, err := getMappedTranslationsFrom(b2)
-	if err != nil {
-		return nil, err
-	}
-
-	mergedData := maputils.Combine[string, interface{}](data1, data2)
-	return mergedData, nil
 }
 
 func getMappedTranslationsFrom(b []byte) (ARBData, error) {

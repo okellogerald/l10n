@@ -100,13 +100,18 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 	return true
 }
 
-func readARBFile(filePath string) ([]byte, error) {
+func ReadARBFile(filePath string) (ARBData, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	return data, nil
+	var m map[string]interface{}
+	if err := json.Unmarshal(data, &m); err != nil {
+		return nil, err
+	}
+
+	return m, nil
 }
 
 func writeARBFile(filename string, data ARBData) error {

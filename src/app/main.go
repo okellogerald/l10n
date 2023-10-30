@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
+	maputils "github.com/okellogerald/l10n.git/src/utils/map_utils"
 )
 
 func JoinTranslations() error {
@@ -64,31 +64,39 @@ func JoinTranslations() error {
 				return err
 			}
 
-			var parsedData1 map[string]interface{}
-			err = json.Unmarshal([]byte(rootContent), &parsedData1)
+			mergedData, err := mergeContents(rootContent, content)
 			if err != nil {
 				return err
 			}
-
-			var parsedData2 map[string]interface{}
-			err = json.Unmarshal([]byte(content), &parsedData2)
-			if err != nil {
-				return err
-			}
-
-			list1 := convertMapToARBData(parsedData1)
-			list2 := convertMapToARBData(parsedData2)
-			mergedData := list.Combine(list1, list2)
-
+			
 			to := fmt.Sprintf("%v/app_%v.arb", from, locale)
-			err = writeARB(mergedData, to)
-			if err != nil {
+			if err := writeARB(mergedData, to); err != nil {
 				return err
 			}
 		}
 	}
 
 	return nil
+}
+
+func mergeContents(b1, b2 []byte) (ARBData, error) {
+	data1, err := getMappedTranslationsFrom(b1)
+	data2, err := getMappedTranslationsFrom(b2)
+	if err != nil {
+		return nil, err
+	}
+
+	mergedData := maputils.Combine[string, interface{}](data1, data2)
+	return mergedData, nil
+}
+
+func getMappedTranslationsFrom(b []byte) (ARBData, error) {
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(b), &data); err != nil {
+		return nil, nil
+	}
+
+	return data, nil
 }
 
 func deleteFileContents(filePath string) error {

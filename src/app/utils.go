@@ -109,7 +109,7 @@ func readARBFile(filePath string) ([]byte, error) {
 	return data, nil
 }
 
-func writeARBFile(filename string, data ARBEntry) error {
+func writeARBFile(filename string, data ARBData) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -144,33 +144,9 @@ func getLocaleFromFile(filePath string) (string, error) {
 	return locales[index], nil
 }
 
-func convertMapToARBData(data map[string]interface{}) ARBData {
-	list := make(ARBData, 0)
-
-	for k, v := range data {
-		list = append(list, ARBEntry{
-			key:   k,
-			value: v,
-		})
-	}
-
-	return list
-}
-
-func convertARBDataToMap(data ARBData) map[string]interface{} {
-	result := make(map[string]interface{})
-
-	for i := 0; i < len(data); i++ {
-		result[data[i].key] = data[i].value
-	}
-
-	return result
-}
-
 func writeARB(data ARBData, filePath string) error {
-	arbMap := convertARBDataToMap(data)
 	// Convert the ARBData map to JSON
-	jsonData, err := json.MarshalIndent(arbMap, "", "  ")
+	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
 	}

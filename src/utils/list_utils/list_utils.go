@@ -18,7 +18,31 @@ func IndexOf[T comparable](item T, from []T) int {
 		}
 	}
 
-	return index;
+	return index
+}
+
+func IndexWhere[T comparable](from []T, predicate func(T) bool) int {
+	index := -1 // Initialize index to -1
+
+	for i := 0; i < len(from); i++ {
+		if predicate(from[i]) { // If predicate function returns true
+			return i // Return current index
+		}
+	}
+
+	return index // Return index if not found
+}
+
+func Where[T comparable](from []T, predicate func(T) bool) []T {
+	var list []T
+
+	for i := 0; i < len(from); i++ {
+		if predicate(from[i]) {
+			list = append(list, from[i])
+		}
+	}
+
+	return list
 }
 
 func Combine[T comparable](list1 []T, list2 []T) []T {

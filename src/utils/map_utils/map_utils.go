@@ -13,3 +13,4 @@ func Combine[T comparable, S comparable](map1, map2 map[T]S) map[T]S {
 
 	return combinedMap
 }
+

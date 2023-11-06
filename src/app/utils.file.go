@@ -66,7 +66,7 @@ func checkIfFolderHasAllSpecifiedLocales(folderPath string) bool {
 	for i := 0; i < len(locales); i++ {
 		println(files[i])
 		fileName := path.Base(files[i])
-		fileName, found := strings.CutSuffix(fileName, ".arb")
+		fileName, found := strings.CutSuffix(fileName, ".json")
 		contanined := list.CheckFor[string](fileName, locales)
 		if !contanined || !found {
 			return false
@@ -89,7 +89,7 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 	for i := 0; i < len(locales); i++ {
 		println(files[i])
 		fileName := path.Base(files[i])
-		fileName, found := strings.CutSuffix(fileName, ".arb")
+		fileName, found := strings.CutSuffix(fileName, ".json")
 		fileName, found = strings.CutPrefix(fileName, "app_")
 		contanined := list.CheckFor[string](fileName, locales)
 		if !contanined || !found {
@@ -100,7 +100,7 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 	return true
 }
 
-func ReadARBFile(filePath string) (ARBData, error) {
+func DecodeJSONFile(filePath string) (Content, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func ReadARBFile(filePath string) (ARBData, error) {
 	return m, nil
 }
 
-func writeARBFile(filename string, data ARBData) error {
+func WriteJSONFile(filename string, data Content) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -136,7 +136,7 @@ func writeARBFile(filename string, data ARBData) error {
 
 func getLocaleFromFile(filePath string) (string, error) {
 	fileName := path.Base(filePath)
-	locale, found := strings.CutSuffix(fileName, ".arb")
+	locale, found := strings.CutSuffix(fileName, ".json")
 	if !found {
 		return "", errors.New("Please check the filenames")
 	}
@@ -149,7 +149,7 @@ func getLocaleFromFile(filePath string) (string, error) {
 	return locales[index], nil
 }
 
-func writeARB(data ARBData, filePath string) error {
+func writeARB(data Content, filePath string) error {
 	// Convert the ARBData map to JSON
 	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {

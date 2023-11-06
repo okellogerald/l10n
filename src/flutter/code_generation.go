@@ -24,7 +24,7 @@ func GenerateAppLocalizationFile() error {
 
 	// -> write starter logic
 	w.WriteString(ln(`
-	abstract class AppLocalizations
+	abstract class AppLocalizations {
 		AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 		
 		final String localeName;

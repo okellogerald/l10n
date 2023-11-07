@@ -16,3 +16,5 @@ If [this issue](https://github.com/flutter/flutter/issues/107157) is resolved, t
             ru.json
 2. Go into `src/app/globals.go` and change the constants there to match your projects details
 3. Then run the program with the command `go run .`. It should generate all the localization files you need, just as `flutter_localizations` does it.
+
+The `example/` folder may be helpful.

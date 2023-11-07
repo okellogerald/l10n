@@ -225,15 +225,15 @@ func writeInterfaceMethods(w *bufio.Writer, methods []app.Method) {
 
 		var desc string
 		if len(method.Description) == 0 {
-			desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
+			desc = fmt.Sprintf("No description provided for @%v", method.Name)
 		} else {
 			desc = method.Description
 		}
 
 		mainLocaleTranslation := method.Translations[0]
 		mainLocaleTranslation = strings.ReplaceAll(mainLocaleTranslation, "\n", "")
-		w.WriteString(lnt(desc))
-		w.WriteString(lnt("///"))
+		w.WriteString(lnt(fmt.Sprintf("/// %v", desc)))
+		w.WriteString(ln("///"))
 		w.WriteString(lnt(fmt.Sprintf("/// In %v it is translated to:", app.MainLocale)))
 		w.WriteString(lnt(fmt.Sprintf("/// **%v**", mainLocaleTranslation)))
 		w.WriteString(lnt(s))

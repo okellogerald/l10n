@@ -1,0 +1,11 @@
+{
+    "greeting": "Hello {name},",
+    "@greeting": {
+        "description": "A greeting",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    }
+}

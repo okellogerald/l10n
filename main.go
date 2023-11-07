@@ -1,15 +1,40 @@
 package main
 
 import (
-	app "github.com/okellogerald/l10n.git/src/app"
+	"os"
+
+	"github.com/okellogerald/l10n.git/src/app"
 	"github.com/okellogerald/l10n.git/src/flutter"
 )
 
 func main() {
-	err := app.JoinTranslations()
+	data, err := app.JoinTranslations()
 	if err != nil {
 		panic(err)
 	}
 
-	flutter.PubGet()
+	err = os.RemoveAll(app.LocalizationsDir)
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.GenerateLocalizationFiles(*data)
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.PubGet()
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.Format()
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.ApplyFixes()
+	if err != nil {
+		panic(err)
+	}
 }

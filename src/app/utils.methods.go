@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/okellogerald/l10n.git/src/utils"
+	maputils "github.com/okellogerald/l10n.git/src/utils/map_utils"
 )
 
 func IsMethodsGroup(data map[string]interface{}) bool {
@@ -57,7 +58,7 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 	}
 
 	var methods []Method
-	mainLocaleContent, ok := utils.ConvertTo[map[string]interface{}](data[mainLocale], data)
+	mainLocaleContent, ok := utils.ConvertTo[map[string]interface{}](data[MainLocale], data)
 	if !ok {
 		return nil, errors.New("Main locale content - something is wrong")
 	}
@@ -67,13 +68,18 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 		var placeHolders []PlaceHolder
 		var desc string
 
+		if name == "_id" || name == "_name" {
+			continue
+		}
+
 		if ok := strings.HasPrefix(k, "@"); ok {
 			continue
 		}
 
-		more := data[fmt.Sprintf("@%v", k)]
+		more := mainLocaleContent[fmt.Sprintf("@%v", name)]
 
-		if map1, ok := more.(map[string]interface{}); ok {
+		map1, ok := maputils.ConvertToContentMap(more)
+		if ok && len(map1) != 0 {
 			place_holders := map1["placeholders"]
 			description := map1["description"]
 

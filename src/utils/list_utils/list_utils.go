@@ -52,3 +52,15 @@ func Combine[T comparable](list1 []T, list2 []T) []T {
 	result = append(result, list2...)
 	return result
 }
+
+func Map[S, T comparable](from []T, fn func(T) S) []S {
+	var list = make([]S, 0)
+
+	for i := 0; i < len(from); i++ {
+		list = append(list, fn(from[i]))
+	}
+
+	return list
+}
+
+

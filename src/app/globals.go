@@ -4,7 +4,7 @@ package app
 var Locales = []Locale{"en", "sw"}
 
 // Locale from which the descriptions and placeholders are going to be checked from
-var mainLocale = "en"
+var MainLocale = "en"
 
 // will look for all files ending with *_en.arb and *_sw.arb in the folders
 // existing in this folder

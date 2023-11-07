@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/okellogerald/l10n.git/src/app"
 	"github.com/okellogerald/l10n.git/src/utils"
+	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
 )
 
 func GenerateLocalizationFiles(data app.MethodsData) error {
@@ -63,26 +65,8 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 		];
 	`))
 
-	for i := 0; i < len(data.MethodGroups); i++ {
-		group := data.MethodGroups[i]
-		s := fmt.Sprintf("%v get %v;", group.Identifier, group.Name)
-		w.WriteString(lnt(s))
-		w.WriteString(ln(""))
-	}
-
-	for i := 0; i < len(data.Methods); i++ {
-		method := data.Methods[i]
-		s := fmt.Sprintf("String get %v;", method.Name)
-		var desc string
-		if len(method.Description) == 0 {
-			desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
-		} else {
-			desc = method.Description
-		}
-		w.WriteString(lnt(desc))
-		w.WriteString(lnt(s))
-		w.WriteString(ln(""))
-	}
+	writeInterfaceGroups(w, data.MethodGroups)
+	writeInterfaceMethods(w, data.Methods)
 
 	w.WriteString(ln("}"))
 
@@ -127,19 +111,7 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 		w.WriteString(ln(s))
 		w.WriteString(ln(""))
 
-		for i := 0; i < len(group.Methods); i++ {
-			method := data.Methods[i]
-			s := fmt.Sprintf("String get %v;", method.Name)
-			var desc string
-			if len(method.Description) == 0 {
-				desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
-			} else {
-				desc = method.Description
-			}
-			w.WriteString(lnt(desc))
-			w.WriteString(lnt(s))
-			w.WriteString(ln(""))
-		}
+		writeInterfaceMethods(w, group.Methods)
 
 		w.WriteString(ln("}"))
 	}
@@ -183,29 +155,8 @@ func generateSpecificLocaleFiles(data app.MethodsData) error {
   			AppLocalizations%v([String locale = '%v']) : super(locale);
 		`, locale, capitalizedLocale, capitalizedLocale, locale)))
 
-		for i := 0; i < len(data.MethodGroups); i++ {
-			group := data.MethodGroups[i]
-			s := fmt.Sprintf("%[1]s get %[2]s => %[1]s%[3]s();", group.Identifier, group.Name, capitalizedLocale)
-			w.WriteString(lnt("@override"))
-			w.WriteString(lnt(s))
-			w.WriteString(ln(""))
-		}
-
-		for j := 0; j < len(data.Methods); j++ {
-			method := data.Methods[j]
-			w.WriteString(lnt("@override"))
-			tr := method.Translations[i]
-
-			containsNewLines := strings.Contains(tr, "\n")
-			var s string
-			if containsNewLines {
-				s = fmt.Sprintf("String get %v => '''%v''';", method.Name, tr)
-			} else {
-				s = fmt.Sprintf("String get %v => \"%v\";", method.Name, tr)
-			}
-			w.WriteString(lnt(s))
-			w.WriteString(ln(""))
-		}
+		writeMethodGroups(w, data.MethodGroups, locale)
+		writeMethods(w, data.Methods, i)
 
 		w.WriteString(ln("}"))
 		w.WriteString(ln(""))
@@ -216,23 +167,7 @@ func generateSpecificLocaleFiles(data app.MethodsData) error {
 			w.WriteString(ln(s))
 			w.WriteString(ln(""))
 
-			for k := 0; k < len(group.Methods); k++ {
-				method := data.Methods[k]
-				w.WriteString(lnt("@override"))
-
-				var s string
-				tr := method.Translations[i]
-
-				containsNewLines := strings.Contains(tr, "\n")
-
-				if containsNewLines {
-					s = fmt.Sprintf("String get %v => '''%v''';", method.Name, tr)
-				} else {
-					s = fmt.Sprintf("String get %v => \"%v\";", method.Name, tr)
-				}
-				w.WriteString(lnt(s))
-				w.WriteString(ln(""))
-			}
+			writeMethods(w, group.Methods, i)
 
 			w.WriteString(ln("}"))
 		}
@@ -246,6 +181,109 @@ func generateSpecificLocaleFiles(data app.MethodsData) error {
 	return nil
 }
 
+func writeInterfaceGroups(w *bufio.Writer, groups []app.MethodGroup) {
+	for i := 0; i < len(groups); i++ {
+		group := groups[i]
+		s := fmt.Sprintf("%v get %v;", group.Identifier, group.Name)
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
+}
+
+func writeInterfaceMethods(w *bufio.Writer, methods []app.Method) {
+	for i := 0; i < len(methods); i++ {
+		method := methods[i]
+		hasPlaceHolders := len(method.PlaceHolders) > 0
+
+		var s string
+
+		if hasPlaceHolders {
+			joiner := func(p app.PlaceHolder) string {
+				return p.Type + " " + p.Name
+			}
+			result := list.Map[string, app.PlaceHolder](method.PlaceHolders, joiner)
+			params := strings.Join(result, ", ")
+			name := method.Name
+			s = fmt.Sprintf("String %v(%v);", name, params)
+		} else {
+			s = fmt.Sprintf("String get %v;", method.Name)
+		}
+
+		var desc string
+		if len(method.Description) == 0 {
+			desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
+		} else {
+			desc = method.Description
+		}
+
+		mainLocaleTranslation := method.Translations[0]
+		mainLocaleTranslation = strings.ReplaceAll(mainLocaleTranslation, "\n", "")
+		w.WriteString(lnt(desc))
+		w.WriteString(lnt("///"))
+		w.WriteString(lnt(fmt.Sprintf("/// In %v it is translated to:", app.MainLocale)))
+		w.WriteString(lnt(fmt.Sprintf("/// **%v**", mainLocaleTranslation)))
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
+}
+
+func writeMethods(w *bufio.Writer, methods []app.Method, i int) {
+	for k := 0; k < len(methods); k++ {
+		method := methods[k]
+
+		println("Placeholders :", fmt.Sprintf("%v", method.PlaceHolders))
+
+		if len(method.Translations) < 2 {
+			continue
+		}
+
+		w.WriteString(lnt("@override"))
+
+		var s string
+		tr := method.Translations[i]
+
+		containsNewLines := strings.Contains(tr, "\n")
+		hasPlaceHolders := len(method.PlaceHolders) > 0
+
+		if hasPlaceHolders {
+			joiner := func(p app.PlaceHolder) string {
+				return p.Type + " " + p.Name
+			}
+			result := list.Map[string, app.PlaceHolder](method.PlaceHolders, joiner)
+			params := strings.Join(result, ", ")
+			value := replaceBrackets(tr)
+			name := method.Name
+
+			if containsNewLines {
+				s = fmt.Sprintf("String %v(%v) => '''%v''';", name, params, value)
+			} else {
+				s = fmt.Sprintf("String %v(%v) => \"%v\";", name, params, value)
+			}
+		} else {
+			if containsNewLines {
+				s = fmt.Sprintf("String get %v => '''%v''';", method.Name, tr)
+			} else {
+				s = fmt.Sprintf("String get %v => \"%v\";", method.Name, tr)
+			}
+		}
+
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
+}
+
+func writeMethodGroups(w *bufio.Writer, groups []app.MethodGroup, locale string) {
+	capitalizedLocale := utils.CapitalizeFirstLetter(locale)
+
+	for i := 0; i < len(groups); i++ {
+		group := groups[i]
+		s := fmt.Sprintf("%[1]s get %[2]s => %[1]s%[3]s();", group.Identifier, group.Name, capitalizedLocale)
+		w.WriteString(lnt("@override"))
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
+}
+
 func ln(s string) string {
 	return fmt.Sprintf("%v\n", s)
 }
@@ -253,4 +291,10 @@ func ln(s string) string {
 // New line with tabs
 func lnt(s string) string {
 	return fmt.Sprintf("		%v\n", s)
+}
+
+func replaceBrackets(input string) string {
+	re := regexp.MustCompile(`{([^}]+)}`)
+	output := re.ReplaceAllString(input, `${$1}`)
+	return output
 }

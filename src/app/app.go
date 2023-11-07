@@ -40,7 +40,7 @@ func JoinTranslations() (*MethodsData, error) {
 		predicate := func(s string) bool {
 			paths := strings.Split(s, "/")
 			fileName := paths[len(paths)-1]
-			return fileName == fmt.Sprintf("%v.json", mainLocale)
+			return fileName == fmt.Sprintf("%v.json", MainLocale)
 		}
 		index := list.IndexWhere[string](files, predicate)
 		if index == -1 {

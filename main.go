@@ -32,4 +32,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = flutter.ApplyFixes()
+	if err != nil {
+		panic(err)
+	}
 }

@@ -10,11 +10,6 @@ import (
 )
 
 func JoinTranslations() (*MethodsData, error) {
-	/* err := os.RemoveAll(LocalizationsDir)
-	if err != nil {
-		return nil, err
-	}
-	*/
 	folders, err := getAllFoldersFrom(FROM)
 	if err != nil {
 		return nil, err

@@ -14,20 +14,26 @@ func IsMethodsGroup(data map[string]interface{}) bool {
 		return ok
 	}
 
-	if len(identifier) == 0 {
+	name, ok := data["_name"].(string)
+	if !ok {
+		return ok
+	}
+
+	if len(identifier) == 0 || len(name) == 0 {
 		return false
 	}
 
 	return true
 }
 
-func GetMethodsGroupFrom(identifier string, files ...string) (*MethodGroup, error) {
+func GetMethodsGroupFrom(identifier string, name string, files ...string) (*MethodGroup, error) {
 	methods, err := GetMethodsFrom(files...)
 	if err != nil {
 		return nil, err
 	}
 	group := MethodGroup{
 		Identifier: identifier,
+		Name:       name,
 		Methods:    methods,
 	}
 	return &group, nil
@@ -94,8 +100,8 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 		}
 
 		var translations []string
-		for i := 0; i < len(locales); i++ {
-			translation, ok := utils.ConvertTo[map[string]interface{}](data[locales[i]], data)
+		for i := 0; i < len(Locales); i++ {
+			translation, ok := utils.ConvertTo[map[string]interface{}](data[Locales[i]], data)
 			if !ok {
 				return nil, errors.New("Locale translation - Something went wrong")
 			}

@@ -1,7 +1,7 @@
 package app
 
-// All locales supported by the app
-var locales = []Locale{"en", "sw"}
+// All Locales supported by the app
+var Locales = []Locale{"en", "sw"}
 
 // Locale from which the descriptions and placeholders are going to be checked from
 var mainLocale = "en"
@@ -17,5 +17,4 @@ const TO = "/Users/mac/Programs/Personal/l10n_flutter/l10n"
 const FlutterProjectDir = "/Users/mac/Programs/Personal/l10n_flutter"
 
 // Where the generated localization files will be stored
-const LocalizationsDir = "/Users/mac/Programs/Personal/l10n_flutter/lib/localization"
-
+const LocalizationsDir = "/Users/mac/Programs/Personal/l10n_flutter/lib/localizations"

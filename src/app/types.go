@@ -17,7 +17,10 @@ type Method struct {
 }
 
 type MethodGroup struct {
+	// Will be the class name for the generated class
 	Identifier string
+	// Will be the method name in the app_localization file
+	Name       string
 	Methods    []Method
 }
 

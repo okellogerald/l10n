@@ -59,15 +59,15 @@ func checkIfFolderHasAllSpecifiedLocales(folderPath string) bool {
 		return false
 	}
 
-	if len(files) != len(locales) {
+	if len(files) != len(Locales) {
 		return false
 	}
 
-	for i := 0; i < len(locales); i++ {
+	for i := 0; i < len(Locales); i++ {
 		println(files[i])
 		fileName := path.Base(files[i])
 		fileName, found := strings.CutSuffix(fileName, ".json")
-		contanined := list.CheckFor[string](fileName, locales)
+		contanined := list.CheckFor[string](fileName, Locales)
 		if !contanined || !found {
 			return false
 		}
@@ -82,16 +82,16 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 		return false
 	}
 
-	if len(files) != len(locales) {
+	if len(files) != len(Locales) {
 		return false
 	}
 
-	for i := 0; i < len(locales); i++ {
+	for i := 0; i < len(Locales); i++ {
 		println(files[i])
 		fileName := path.Base(files[i])
 		fileName, found := strings.CutSuffix(fileName, ".json")
 		fileName, found = strings.CutPrefix(fileName, "app_")
-		contanined := list.CheckFor[string](fileName, locales)
+		contanined := list.CheckFor[string](fileName, Locales)
 		if !contanined || !found {
 			return false
 		}
@@ -141,12 +141,12 @@ func getLocaleFromFile(filePath string) (string, error) {
 		return "", errors.New("Please check the filenames")
 	}
 
-	index := list.IndexOf[string](locale, locales)
+	index := list.IndexOf[string](locale, Locales)
 	if index == -1 {
 		return "", errors.New("File not found")
 	}
 
-	return locales[index], nil
+	return Locales[index], nil
 }
 
 func writeARB(data Content, filePath string) error {

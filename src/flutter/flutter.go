@@ -24,3 +24,20 @@ func PubGet() error {
 	fmt.Println(out.String())
 	return nil
 }
+
+func Format() error {
+	println("-----attempting to run dart format-----")
+	cmd := exec.Command("dart", "format", app.LocalizationsDir)
+	cmd.Dir = app.FlutterProjectDir
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(out.String())
+	return nil
+}

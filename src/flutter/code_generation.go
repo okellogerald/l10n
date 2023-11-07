@@ -5,15 +5,20 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
+
+	"github.com/okellogerald/l10n.git/src/app"
+	"github.com/okellogerald/l10n.git/src/utils"
 )
 
-func GenerateAppLocalizationFile() error {
-	// path := fmt.Sprintf("%s/app_localization.dart", app.TO)
-	// Open the file in write mode
-	// Open the file for writing
-	file, err := os.Create("output.dart")
+func GenerateLocalizationFiles(data app.MethodsData) error {
+	err := os.Mkdir(app.LocalizationsDir, 0755)
 	if err != nil {
-		log.Fatal(err)
+		return err
+	}
+	file, err := os.Create(fmt.Sprintf("%v/app_localizations.dart", app.LocalizationsDir))
+	if err != nil {
+		return err
 	}
 	defer file.Close()
 
@@ -24,6 +29,16 @@ func GenerateAppLocalizationFile() error {
 
 	// -> write starter logic
 	w.WriteString(ln(`
+	import 'dart:async';
+
+	import 'package:flutter/foundation.dart';
+	import 'package:flutter/widgets.dart';
+	import 'package:flutter_localizations/flutter_localizations.dart';
+	import 'package:intl/intl.dart' as intl;
+
+	import 'app_localizations_en.dart';
+	import 'app_localizations_sw.dart';
+
 	abstract class AppLocalizations {
 		AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 		
@@ -47,6 +62,27 @@ func GenerateAppLocalizationFile() error {
 		  Locale('sw')
 		];
 	`))
+
+	for i := 0; i < len(data.MethodGroups); i++ {
+		group := data.MethodGroups[i]
+		s := fmt.Sprintf("%v get %v;", group.Identifier, group.Name)
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
+
+	for i := 0; i < len(data.Methods); i++ {
+		method := data.Methods[i]
+		s := fmt.Sprintf("String get %v;", method.Name)
+		var desc string
+		if len(method.Description) == 0 {
+			desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
+		} else {
+			desc = method.Description
+		}
+		w.WriteString(lnt(desc))
+		w.WriteString(lnt(s))
+		w.WriteString(ln(""))
+	}
 
 	w.WriteString(ln("}"))
 
@@ -85,10 +121,38 @@ func GenerateAppLocalizationFile() error {
 	  
 	`)
 
+	for i := 0; i < len(data.MethodGroups); i++ {
+		group := data.MethodGroups[i]
+		s := fmt.Sprintf("abstract class %v {", group.Identifier)
+		w.WriteString(ln(s))
+		w.WriteString(ln(""))
+
+		for i := 0; i < len(group.Methods); i++ {
+			method := data.Methods[i]
+			s := fmt.Sprintf("String get %v;", method.Name)
+			var desc string
+			if len(method.Description) == 0 {
+				desc = fmt.Sprintf("/// No description provided for @%v", method.Name)
+			} else {
+				desc = method.Description
+			}
+			w.WriteString(lnt(desc))
+			w.WriteString(lnt(s))
+			w.WriteString(ln(""))
+		}
+
+		w.WriteString(ln("}"))
+	}
+
 	// Flush the buffered writer to ensure all data is written to the file
 	err = w.Flush()
 	if err != nil {
-		log.Fatal(err)
+		return err
+	}
+
+	err = generateSpecificLocaleFiles(data)
+	if err != nil {
+		return err
 	}
 
 	log.Println("File writing completed.")
@@ -96,6 +160,97 @@ func GenerateAppLocalizationFile() error {
 	return nil
 }
 
+func generateSpecificLocaleFiles(data app.MethodsData) error {
+	for i := 0; i < len(app.Locales); i++ {
+		locale := app.Locales[i]
+		dir := app.LocalizationsDir
+		file, err := os.Create(fmt.Sprintf("%v/app_localizations_%v.dart", dir, locale))
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		// Create a buffered w
+		w := bufio.NewWriter(file)
+
+		capitalizedLocale := utils.CapitalizeFirstLetter(locale)
+
+		w.WriteString(ln("import 'app_localizations.dart';"))
+
+		w.WriteString(ln(fmt.Sprintf(`
+		/// The translations for %v).
+		class AppLocalizations%v extends AppLocalizations {
+  			AppLocalizations%v([String locale = '%v']) : super(locale);
+		`, locale, capitalizedLocale, capitalizedLocale, locale)))
+
+		for i := 0; i < len(data.MethodGroups); i++ {
+			group := data.MethodGroups[i]
+			s := fmt.Sprintf("%[1]s get %[2]s => %[1]s%[3]s();", group.Identifier, group.Name, capitalizedLocale)
+			w.WriteString(lnt("@override"))
+			w.WriteString(lnt(s))
+			w.WriteString(ln(""))
+		}
+
+		for j := 0; j < len(data.Methods); j++ {
+			method := data.Methods[j]
+			w.WriteString(lnt("@override"))
+			tr := method.Translations[i]
+
+			containsNewLines := strings.Contains(tr, "\n")
+			var s string
+			if containsNewLines {
+				s = fmt.Sprintf("String get %v => '''%v''';", method.Name, tr)
+			} else {
+				s = fmt.Sprintf("String get %v => \"%v\";", method.Name, tr)
+			}
+			w.WriteString(lnt(s))
+			w.WriteString(ln(""))
+		}
+
+		w.WriteString(ln("}"))
+		w.WriteString(ln(""))
+
+		for j := 0; j < len(data.MethodGroups); j++ {
+			group := data.MethodGroups[j]
+			s := fmt.Sprintf("class %[1]s%v extends %[1]s {", group.Identifier, capitalizedLocale)
+			w.WriteString(ln(s))
+			w.WriteString(ln(""))
+
+			for k := 0; k < len(group.Methods); k++ {
+				method := data.Methods[k]
+				w.WriteString(lnt("@override"))
+
+				var s string
+				tr := method.Translations[i]
+
+				containsNewLines := strings.Contains(tr, "\n")
+
+				if containsNewLines {
+					s = fmt.Sprintf("String get %v => '''%v''';", method.Name, tr)
+				} else {
+					s = fmt.Sprintf("String get %v => \"%v\";", method.Name, tr)
+				}
+				w.WriteString(lnt(s))
+				w.WriteString(ln(""))
+			}
+
+			w.WriteString(ln("}"))
+		}
+
+		err = w.Flush()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func ln(s string) string {
 	return fmt.Sprintf("%v\n", s)
+}
+
+// New line with tabs
+func lnt(s string) string {
+	return fmt.Sprintf("		%v\n", s)
 }

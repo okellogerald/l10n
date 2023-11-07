@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/okellogerald/l10n.git/src/app"
+	"github.com/okellogerald/l10n.git/src/flutter"
 )
 
 func main() {
@@ -12,5 +13,23 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(data)
+	err = os.RemoveAll(app.LocalizationsDir)
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.GenerateLocalizationFiles(*data)
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.PubGet()
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.Format()
+	if err != nil {
+		panic(err)
+	}
 }

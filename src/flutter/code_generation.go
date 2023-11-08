@@ -62,7 +62,8 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 	result := list.Map[string, string](app.Locales, pred)
 	localesInstances := strings.Join(result, ",")
 	w.WriteString(ln(fmt.Sprintf("static const List<Locale> supportedLocales = <Locale>[%v];", localesInstances)))
-
+	w.WriteString(ln(""))
+	
 	writeInterfaceGroups(w, data.MethodGroups)
 	writeInterfaceMethods(w, data.Methods)
 
@@ -233,7 +234,7 @@ func writeInterfaceMethods(w *bufio.Writer, methods []app.Method) {
 		mainLocaleTranslation := method.Translations[0]
 		mainLocaleTranslation = strings.ReplaceAll(mainLocaleTranslation, "\n", "")
 		w.WriteString(lnt(fmt.Sprintf("/// %v", desc)))
-		w.WriteString(ln("///"))
+		w.WriteString(lnt("///"))
 		w.WriteString(lnt(fmt.Sprintf("/// In %v it is translated to:", app.MainLocale)))
 		w.WriteString(lnt(fmt.Sprintf("/// **%v**", mainLocaleTranslation)))
 		w.WriteString(lnt(s))
@@ -244,8 +245,6 @@ func writeInterfaceMethods(w *bufio.Writer, methods []app.Method) {
 func writeMethods(w *bufio.Writer, methods []app.Method, i int) {
 	for k := 0; k < len(methods); k++ {
 		method := methods[k]
-
-		println("Placeholders :", fmt.Sprintf("%v", method.PlaceHolders))
 
 		if len(method.Translations) < 2 {
 			continue

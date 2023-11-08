@@ -64,7 +64,6 @@ func checkIfFolderHasAllSpecifiedLocales(folderPath string) bool {
 	}
 
 	for i := 0; i < len(Locales); i++ {
-		println(files[i])
 		fileName := path.Base(files[i])
 		fileName, found := strings.CutSuffix(fileName, ".json")
 		contanined := list.CheckFor[string](fileName, Locales)
@@ -87,7 +86,6 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 	}
 
 	for i := 0; i < len(Locales); i++ {
-		println(files[i])
 		fileName := path.Base(files[i])
 		fileName, found := strings.CutSuffix(fileName, ".json")
 		fileName, found = strings.CutPrefix(fileName, "app_")

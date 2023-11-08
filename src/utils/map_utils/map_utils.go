@@ -1,7 +1,6 @@
 package maputils
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -20,7 +19,6 @@ func Combine[T comparable, S comparable](map1, map2 map[T]S) map[T]S {
 }
 
 func ConvertToContentMap(value any) (map[string]interface{}, bool) {
-	println(fmt.Sprintf("%v", value))
 	v := reflect.ValueOf(value)
 	if v.Kind() == reflect.Map {
 		myMap := make(map[string]interface{})

@@ -8,7 +8,7 @@ If [this issue](https://github.com/flutter/flutter/issues/107157) is resolved, t
    -   intl:
    -   flutter_localizations:
             sdk: flutter
-   Also make sure that the generate is set to false or commented under flutter tag in pubspec.yaml
+   Also make sure that the l10n.yaml file is deleted, because its presence will prompt generating the localization files with the flutter_localizations package.
 
 ## Getting Started
 1. Create translation folders. They should all be in the same folder.

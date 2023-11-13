@@ -1,22 +1,4 @@
 {
   "email": "Barua Pepe",
-  "businessName": "Jina la Biashara",
-  "profileName": "Jina",
-  "phone": "Namba Ya Simu",
-  "accountNo": "Namba ya Akaunti",
-  "settings": "Mipangilio",
-  "addPhone": "Weka Namba Ya Simu",
-  "changePIN": "Badilisha PIN",
-  "signOut": "Sign Out",
-  "changeLanguage": "Badilisha Lugha",
-  "changePINDesc": "Kubadilisha PIN kutakulazimu uwe signed-out kwenye application, na hivyo itakulazimu ku-sign in upya tena. Upo tayari kuendelea?",
-  "signOutDesc": "Upo karibu kutoka katika application. Muda mwingine ukitaka kuingia katika application, utahitaji u-sign-in. Upo tayari kuendelea",
-  "changeBusinessName": "Badilisha Jina la Biashara",
-  "firstName": "Jina la Kwanza",
-  "lastName": "Jina la Ukoo",
-  "businessNameBeingProfileNameError": "Hakikisha jina la biashara sio tu muunganisho wa majina yako",
-  "createAccountPageTitle": "Jaza Taarifa Zako",
-  "optionalField": "{field} (Hiari)",
-  "notifyEmailBeingUsed": "You're logged in with {email}",
-  "invalidPhoneNumberError": "Tafadhari hakikisha umeweka namba ya simu sahihi"
+  "profileName": "Jina"
 }

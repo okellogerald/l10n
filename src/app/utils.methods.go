@@ -41,10 +41,10 @@ func GetMethodsGroupFrom(identifier string, name string, files ...string) (*Meth
 }
 
 func GetMethodsFrom(files ...string) ([]Method, error) {
-	var data = make(map[string]interface{})
+	var localesMap = make(map[string]interface{})
 
 	for i := 0; i < len(files); i++ {
-		content, err := DecodeJSONFile(files[i])
+		content, contentList, err := DecodeJSONFile(files[i])
 		if err != nil {
 			return nil, err
 		}
@@ -54,11 +54,17 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 			return nil, err
 		}
 
-		data[locale] = content
+		if content != nil {
+			localesMap[locale] = content
+		}
+
+		if contentList != nil {
+			return nil, errors.New("unexpected list here")
+		}
 	}
 
 	var methods []Method
-	mainLocaleContent, ok := utils.ConvertTo[map[string]interface{}](data[MainLocale], data)
+	mainLocaleContent, ok := utils.ConvertTo[map[string]interface{}](localesMap[MainLocale], localesMap)
 	if !ok {
 		return nil, errors.New("Main locale content - something is wrong")
 	}
@@ -107,7 +113,7 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 
 		var translations []string
 		for i := 0; i < len(Locales); i++ {
-			translation, ok := utils.ConvertTo[map[string]interface{}](data[Locales[i]], data)
+			translation, ok := utils.ConvertTo[map[string]interface{}](localesMap[Locales[i]], localesMap)
 			if !ok {
 				return nil, errors.New("Locale translation - Something went wrong")
 			}
@@ -115,7 +121,6 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 				continue
 			}
 			value, ok := translation[name].(string)
-
 			if !ok {
 				return nil, errors.New("Value - Something went wrong")
 			}
@@ -133,4 +138,46 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 	}
 
 	return methods, nil
+}
+
+type group struct {
+	id      string
+	name    string
+	methods []string
+}
+
+// Responsible for transcoding files with a list of method-groups
+func GetMethodsGroupsFrom(mainContentList []map[string]interface{}, files ...string) ([]MethodGroup, error) {
+	var groups = make([]group, 0)
+
+	// getting groups information
+	for i := 0; i < len(mainContentList); i++ {
+		item := mainContentList[i]
+		isGroup := IsMethodsGroup(item)
+		if isGroup {
+			id := item["_id"].(string)
+			name := item["_name"].(string)
+			methods := make([]string, 0)
+
+			for k, _ := range item {
+				if strings.HasPrefix(k, "@") {
+					continue
+				}
+
+				methods = append(methods, k)
+			}
+			group := group{
+				id:      id,
+				name:    name,
+				methods: methods,
+			}
+			groups = append(groups, group)
+		} else {
+			return nil, errors.New("Expecting only method groups")
+		}
+	}
+
+	// converting list of translations to maps
+
+	return groups, nil
 }

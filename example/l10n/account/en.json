@@ -1,0 +1,13 @@
+[
+    {
+        "_id": "Account",
+        "_name": "account",
+        "information": "Account Information",
+        "settings": "Account Settings"
+    },
+    {
+        "_id": "AccountSettings",
+        "_name": "accountSettings",
+        "password": "Password"
+    }
+]

@@ -44,27 +44,38 @@ func JoinTranslations() (*MethodsData, error) {
 
 		mainFile := files[index]
 
-		mainContent, err := DecodeJSONFile(mainFile)
+		mainContent, mainContentList, err := DecodeJSONFile(mainFile)
 		if err != nil {
 			return nil, err
 		}
-		isGroup := IsMethodsGroup(mainContent)
-		if isGroup {
-			id := mainContent["_id"].(string)
-			name := mainContent["_name"].(string)
-			methodGroup, err := GetMethodsGroupFrom(id, name, files...)
+		if mainContent != nil {
+			isGroup := IsMethodsGroup(mainContent)
+			if isGroup {
+				id := mainContent["_id"].(string)
+				name := mainContent["_name"].(string)
+				methodGroup, err := GetMethodsGroupFrom(id, name, files...)
+				if err != nil {
+					return nil, err
+				}
+
+				methodGroups = append(methodGroups, *methodGroup)
+			} else {
+				method, err := GetMethodsFrom(files...)
+				if err != nil {
+					return nil, err
+				}
+
+				methods = append(methods, method...)
+			}
+		}
+
+		if mainContentList != nil {
+			groups, err := GetMethodsGroupsFrom(mainContentList, files...)
 			if err != nil {
 				return nil, err
 			}
 
-			methodGroups = append(methodGroups, *methodGroup)
-		} else {
-			method, err := GetMethodsFrom(files...)
-			if err != nil {
-				return nil, err
-			}
-
-			methods = append(methods, method...)
+			methodGroups = append(methodGroups, groups...)
 		}
 	}
 

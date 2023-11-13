@@ -3,6 +3,7 @@ package app
 type Locale = string
 
 type Content map[string]interface{}
+type ContentList []map[string]interface{}
 
 type PlaceHolder struct {
 	Name string

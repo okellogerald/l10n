@@ -98,18 +98,25 @@ func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
 	return true
 }
 
-func DecodeJSONFile(filePath string) (Content, error) {
+func DecodeJSONFile(filePath string) (Content, ContentList, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var m map[string]interface{}
-	if err := json.Unmarshal(data, &m); err != nil {
-		return nil, err
+	err = json.Unmarshal(data, &m)
+	if err == nil {
+		return m, nil, err
 	}
 
-	return m, nil
+	var l []map[string]interface{}
+	err = json.Unmarshal(data, &l)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return nil, l, nil
 }
 
 func WriteJSONFile(filename string, data Content) error {

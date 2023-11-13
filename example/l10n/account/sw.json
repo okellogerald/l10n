@@ -1,0 +1,11 @@
+[
+    {
+        "_id": "Account",
+        "information": "Taarifa za Akaunti",
+        "settings": "Mipangilio ya Akaunti"
+    },
+    {
+        "_id": "AccountSettings",
+        "password": "Nenosiri"
+    }
+]

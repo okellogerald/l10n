@@ -75,29 +75,6 @@ func checkIfFolderHasAllSpecifiedLocales(folderPath string) bool {
 	return true
 }
 
-func checkIfRootFolderHasAllSpecifiedLocales(folderPath string) bool {
-	files, err := getAllFilesFrom(folderPath)
-	if err != nil {
-		return false
-	}
-
-	if len(files) != len(Locales) {
-		return false
-	}
-
-	for i := 0; i < len(Locales); i++ {
-		fileName := path.Base(files[i])
-		fileName, found := strings.CutSuffix(fileName, ".json")
-		fileName, found = strings.CutPrefix(fileName, "app_")
-		contanined := list.CheckFor[string](fileName, Locales)
-		if !contanined || !found {
-			return false
-		}
-	}
-
-	return true
-}
-
 func DecodeJSONFile(filePath string) (Content, ContentList, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
@@ -143,30 +120,13 @@ func getLocaleFromFile(filePath string) (string, error) {
 	fileName := path.Base(filePath)
 	locale, found := strings.CutSuffix(fileName, ".json")
 	if !found {
-		return "", errors.New("Please check the filenames")
+		return "", errors.New("please check the filenames")
 	}
 
 	index := list.IndexOf[string](locale, Locales)
 	if index == -1 {
-		return "", errors.New("File not found")
+		return "", errors.New("file not found")
 	}
 
 	return Locales[index], nil
-}
-
-func writeARB(data Content, filePath string) error {
-	// Convert the ARBData map to JSON
-	jsonData, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	// Write the JSON data to an ARB file
-	os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
-	err = os.WriteFile(filePath, jsonData, 0644)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

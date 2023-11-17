@@ -66,7 +66,7 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 	var methods []Method
 	mainLocaleContent, ok := utils.ConvertTo[map[string]interface{}](localesMap[MainLocale], localesMap)
 	if !ok {
-		return nil, errors.New("Main locale content - something is wrong")
+		return nil, errors.New("main locale content - something is wrong")
 	}
 
 	for k := range mainLocaleContent {
@@ -122,7 +122,7 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 			}
 			value, ok := translation[name].(string)
 			if !ok {
-				return nil, errors.New("Value - Something went wrong")
+				return nil, errors.New("value - Something went wrong")
 			}
 
 			translations = append(translations, value)
@@ -140,44 +140,176 @@ func GetMethodsFrom(files ...string) ([]Method, error) {
 	return methods, nil
 }
 
-type group struct {
+type partialGroup struct {
 	id      string
 	name    string
-	methods []string
+	methods []partialMethod
+}
+
+type partialMethod struct {
+	name         string
+	description  string
+	placeHolders []PlaceHolder
 }
 
 // Responsible for transcoding files with a list of method-groups
-func GetMethodsGroupsFrom(mainContentList []map[string]interface{}, files ...string) ([]MethodGroup, error) {
-	var groups = make([]group, 0)
+func GetMethodsGroupsFrom(files ...string) ([]MethodGroup, error) {
+	// detecting the main file
+	mainFile := ""
+	for i := 0; i < len(files); i++ {
+		locale, err := getLocaleFromFile(files[i])
+		if err != nil {
+			return nil, err
+		}
+
+		if locale == MainLocale {
+			mainFile = files[i]
+			break
+		}
+	}
+
+	// getting main-content from the main-locale file
+	_, mainContentList, err := DecodeJSONFile(mainFile)
+	if err != nil {
+		return nil, err
+	}
 
 	// getting groups information
+	var partialGroups = make([]partialGroup, 0)
+
 	for i := 0; i < len(mainContentList); i++ {
 		item := mainContentList[i]
 		isGroup := IsMethodsGroup(item)
 		if isGroup {
 			id := item["_id"].(string)
 			name := item["_name"].(string)
-			methods := make([]string, 0)
+			methods := make([]partialMethod, 0)
 
-			for k, _ := range item {
+			for k := range item {
+				if k == "_id" || k == "_name" {
+					continue
+				}
 				if strings.HasPrefix(k, "@") {
 					continue
 				}
 
-				methods = append(methods, k)
+				methodName := k
+				var methodDesc string
+				var methodPlaceHolders []PlaceHolder
+
+				more := item[fmt.Sprintf("@%v", methodName)]
+
+				map1, ok := maputils.ConvertToContentMap(more)
+				if ok && len(map1) != 0 {
+					placeholders := map1["placeholders"]
+					description := map1["description"]
+
+					if map2, ok := placeholders.(map[string]interface{}); ok {
+						for k, v := range map2 {
+							if map3, ok := v.(map[string]interface{}); ok {
+								_type := fmt.Sprintf("%v", map3["type"])
+								p := PlaceHolder{Name: k, Type: _type}
+								methodPlaceHolders = append(methodPlaceHolders, p)
+							}
+						}
+					}
+					if v2, ok := description.(string); ok {
+						methodDesc = v2
+					}
+				}
+				method := partialMethod{
+					name:         methodName,
+					description:  methodDesc,
+					placeHolders: methodPlaceHolders,
+				}
+				methods = append(methods, method)
 			}
-			group := group{
+
+			group := partialGroup{
 				id:      id,
 				name:    name,
 				methods: methods,
 			}
-			groups = append(groups, group)
+			partialGroups = append(partialGroups, group)
 		} else {
-			return nil, errors.New("Expecting only method groups")
+			return nil, errors.New("expecting only method groups")
 		}
 	}
 
 	// converting list of translations to maps
+	var localeTranslations = make(map[string]map[string]map[string]string)
+	for i := 0; i < len(files); i++ {
+		locale, err := getLocaleFromFile(files[i])
+		if err != nil {
+			return nil, err
+		}
+
+		var contentList ContentList
+
+		if locale == MainLocale {
+			contentList = mainContentList
+		} else {
+			_, list, err := DecodeJSONFile(files[i])
+			if err != nil {
+				return nil, err
+			}
+			contentList = list
+		}
+
+		var groupContentMap = make(map[string]map[string]string)
+		for j := 0; j < len(contentList); j++ {
+			partialGroup := partialGroups[j]
+			content := contentList[j]
+
+			newContent := make(map[string]string)
+			for k, v := range content {
+				if k == "_id" || k == "_name" {
+					continue
+				}
+				if strings.HasPrefix(k, "@") {
+					continue
+				}
+
+				if value, ok := v.(string); ok {
+					newContent[k] = value
+				}
+			}
+			groupContentMap[partialGroup.id] = newContent
+		}
+
+		localeTranslations[locale] = groupContentMap
+	}
+
+	// at last creating method groups
+	var groups = make([]MethodGroup, 0)
+	for i := 0; i < len(partialGroups); i++ {
+		g := partialGroups[i]
+		var methods = make([]Method, 0)
+		for j := 0; j < len(g.methods); j++ {
+			var translations = make([]string, 0)
+			for k := 0; k < len(Locales); k++ {
+				translation := localeTranslations[Locales[k]][g.id][g.methods[j].name]
+				translations = append(translations, translation)
+			}
+
+			m := g.methods[j]
+
+			method := Method{
+				Name:         m.name,
+				Description:  m.description,
+				PlaceHolders: m.placeHolders,
+				Translations: translations,
+			}
+			methods = append(methods, method)
+		}
+
+		group := MethodGroup{
+			Identifier: g.id,
+			Name:       g.name,
+			Methods:    methods,
+		}
+		groups = append(groups, group)
+	}
 
 	return groups, nil
 }

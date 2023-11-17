@@ -1,7 +1,6 @@
 package app
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -21,7 +20,7 @@ func JoinTranslations() (*MethodsData, error) {
 	for i := 0; i < len(folders); i++ {
 		hasAllLocales := checkIfFolderHasAllSpecifiedLocales(folders[i])
 		if !hasAllLocales {
-			notIncludedAllLocalesError := errors.New("Please make sure you have included all locales translations in all folders")
+			notIncludedAllLocalesError := errors.New("please make sure you have included all locales translations in all folders")
 			if err != nil {
 				return nil, notIncludedAllLocalesError
 			}
@@ -70,7 +69,7 @@ func JoinTranslations() (*MethodsData, error) {
 		}
 
 		if mainContentList != nil {
-			groups, err := GetMethodsGroupsFrom(mainContentList, files...)
+			groups, err := GetMethodsGroupsFrom(files...)
 			if err != nil {
 				return nil, err
 			}
@@ -84,13 +83,4 @@ func JoinTranslations() (*MethodsData, error) {
 		MethodGroups: methodGroups,
 	}
 	return &data, nil
-}
-
-func getMappedTranslationsFrom(b []byte) (Content, error) {
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(b), &data); err != nil {
-		return nil, nil
-	}
-
-	return data, nil
 }

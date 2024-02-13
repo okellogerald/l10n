@@ -7,11 +7,11 @@ var Locales = []Locale{"en", "sw"}
 const MainLocale = "en"
 
 // will look for localization files in this folder
-const FROM = "/Users/macbookpro/Downloads/programs/l10n/example/l10n"
+const FROM = "/Users/mac/Downloads/Programs/temboplus/lipa_china/l10n/"
 
 // Will attempt to run 'flutter pub get' command once the translations are combined
-const FlutterProjectDir = "/Users/macbookpro/Downloads/programs/l10n/example/"
+const FlutterProjectDir = "/Users/mac/Downloads/Programs/temboplus/lipa_china/"
 
 // Where the generated localization files will be stored
-const LocalizationsDir = "/Users/macbookpro/Downloads/programs/l10n/example/localizations"
+const LocalizationsDir = "/Users/mac/Downloads/Programs/temboplus/lipa_china/lib/localizations/"
 

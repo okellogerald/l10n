@@ -27,6 +27,8 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 	w := bufio.NewWriter(file)
 
 	w.WriteString(ln(`
+	// ignore_for_file: depend_on_referenced_packages
+
 	import 'dart:async';
 
 	import 'package:flutter/foundation.dart';

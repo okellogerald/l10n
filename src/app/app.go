@@ -10,7 +10,6 @@ import (
 
 func JoinTranslations(settings GlobalSettings) (*MethodsData, error) {
 	folders, err := getAllFoldersFrom(settings.From)
-	fmt.Println(folders)
 	if err != nil {
 		return nil, err
 	}

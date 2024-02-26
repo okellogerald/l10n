@@ -14,10 +14,10 @@ func main() {
 		panic(err)
 	}
 
-	settings := app.GlobalSettings {
-        FlutterProjectDir:   dir,
-		LocalizationsDir: fmt.Sprintf("%v/l10n", dir),
-        LocalizationsOutDir:   fmt.Sprintf("%v/lib/localizations/", dir),
+	settings := app.GlobalSettings{
+		FlutterProjectDir: dir,
+		From:              fmt.Sprintf("%v/l10n", dir),
+		To:                fmt.Sprintf("%v/lib/localizations/", dir),
 	}
 
 	data, err := app.JoinTranslations(settings)
@@ -25,7 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	err = os.RemoveAll(settings.LocalizationsDir)
+	err = os.RemoveAll(settings.To)
 	if err != nil {
 		panic(err)
 	}

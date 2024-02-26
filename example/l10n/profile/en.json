@@ -1,5 +1,12 @@
-{
-  "_id": "Profile",
-  "_name": "profile",
-  "email": "Email"
-}
+[
+    {
+        "_id": "ProfilePage",
+        "_name": "profilePage",
+        "hello": "Hello"
+    },
+    {
+        "_id": "ProfileEditPage",
+        "_name": "profileEditPage",
+        "edit": "Edit Profile"
+    }
+]

@@ -1,4 +1,10 @@
-{
-  "email": "Barua Pepe",
-  "profileName": "Jina"
-}
+[
+    {
+        "_id": "profilePage",
+        "hello": "Habari"
+    },
+    {
+        "_id": "profileEditPage",
+        "edit": "Badili Wasifu"
+    }
+]

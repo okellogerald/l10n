@@ -27,7 +27,7 @@ func PubGet(settings app.GlobalSettings) error {
 
 func Format(settings app.GlobalSettings) error {
 	println("-----attempting to run dart format-----")
-	cmd := exec.Command("dart", "format", settings.LocalizationsDir)
+	cmd := exec.Command("dart", "format", settings.From)
 	cmd.Dir = settings.FlutterProjectDir
 
 	var out bytes.Buffer

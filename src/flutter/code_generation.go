@@ -14,11 +14,11 @@ import (
 )
 
 func GenerateLocalizationFiles(settings app.GlobalSettings, data app.MethodsData) error {
-	err := os.Mkdir(settings.LocalizationsDir, 0755)
+	err := os.Mkdir(settings.To, 0755)
 	if err != nil {
 		return err
 	}
-	file, err := os.Create(fmt.Sprintf("%v/app_localizations.dart", settings.LocalizationsDir))
+	file, err := os.Create(fmt.Sprintf("%v/app_localizations.dart", settings.To))
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func GenerateLocalizationFiles(settings app.GlobalSettings, data app.MethodsData
 	localesInstances := strings.Join(result, ",")
 	w.WriteString(ln(fmt.Sprintf("static const List<Locale> supportedLocales = <Locale>[%v];", localesInstances)))
 	w.WriteString(ln(""))
-	
+
 	writeInterfaceGroups(w, data.MethodGroups)
 	writeInterfaceMethods(w, data.Methods)
 
@@ -152,7 +152,7 @@ func GenerateLocalizationFiles(settings app.GlobalSettings, data app.MethodsData
 func generateSpecificLocaleFiles(settings app.GlobalSettings, data app.MethodsData) error {
 	for i := 0; i < len(app.Locales); i++ {
 		locale := app.Locales[i]
-		dir := settings.LocalizationsDir
+		dir := settings.To
 		file, err := os.Create(fmt.Sprintf("%v/app_localizations_%v.dart", dir, locale))
 		if err != nil {
 			return err

@@ -22,7 +22,7 @@ func IsMethodsGroup(data map[string]interface{}) bool {
 	return true
 }
 
-func GetMethodsGroupFrom(identifier string, name string, files ...string) (*MethodGroup, error) {
+func GetMethodsGroupFrom(identifier string, files ...string) (*MethodGroup, error) {
 	methods, err := GetMethodsFrom(files...)
 	if err != nil {
 		return nil, err

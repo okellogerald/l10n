@@ -1,0 +1,14 @@
+[
+    {
+        "_id": "Transactions",
+        "me": "Miamala",
+        "loadingMsg": "Inapakia miamala...",
+        "failedToLoadError": "Imeshindwa kupakia miamala. Tafadhali jaribu tena baadae.",
+        "noTransactions": "Hujafanya miamala yoyote. Shughuli zako za hivi karibuni zitaonekana hapa.",
+        "addTransactionAction": "Anza Kutuma Pesa"
+    },
+    {
+        "_id": "Transaction",
+        "me": "Muamala"
+    }
+]

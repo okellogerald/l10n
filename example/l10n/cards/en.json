@@ -1,0 +1,12 @@
+[
+    {
+        "_id": "request_card",
+        "me": "Request Card",
+        "desc": "Get a debit card that you can use to withdraw money from any VISA ATM, anywhere, and to make online payments.",
+        "action": "Request"
+    },
+    {
+        "_id": "got_your_request",
+        "desc": "We have received your card request. We will contact you shortly."
+    }
+]

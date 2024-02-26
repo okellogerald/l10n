@@ -1,10 +1,42 @@
 [
-    {
-        "_id": "profile_page",
-        "hello": "Hello"
+  {
+    "_id": "profile",
+    "email": "Email",
+    "businessName": "Business Name",
+    "name": "Name",
+    "phone": "Phone Number",
+    "accountNo": "Account Number",
+    "firstName": "First Name",
+    "lastName": "Last Name"
+  },
+  {
+    "_id": "profile_page",
+    "settings": "Settings",
+    "addPhone": "Add Phone Number",
+    "changePIN": "Change PIN",
+    "signOut": "Sign Out",
+    "changeLanguage": "Change Language",
+    "changePINDesc": "Changing the PIN will require you to be signed-out of the application, and thus you will have to sign in again. Are you ready to continue?",
+    "signOutDesc": "You are about to exit the application. The next time you want to enter the application, you will need to sign-in. Are you ready to continue?",
+    "changeBusinessName": "Change Business Name",
+    "createAccountPageTitle": "Fill your details",
+    "businessNameBeingProfileNameError": "Please make sure a business name isn't just a combination of your first and last names",
+    "optionalField": "{field} (Optional)",
+    "@optionalField": {
+      "placeholders": {
+        "field": {
+          "type": "String"
+        }
+      }
     },
-    {
-        "_id": "profile_edit_page",
-        "edit": "Edit Profile"
-    }
+    "notifyEmailBeingUsed": "You're logged in with {email}",
+    "@notifyEmailBeingUsed": {
+      "placeholders": {
+        "email": {
+          "type": "String"
+        }
+      }
+    },
+    "invalidPhoneNumberError": "Please make sure you have entered the correct phone number"
+  }
 ]

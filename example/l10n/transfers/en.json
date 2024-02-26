@@ -1,0 +1,25 @@
+[
+    {
+        "_id": "TransferType",
+        "_name": "transferType",
+        "me": "Transfer Type",
+        "temboWallet": "Tembo Wallet Transfer",
+        "phone": "Mobile Wallet Transfer",
+        "bank": "Bank Transfer"
+    },
+    {
+        "_id": "TransferToBankPage",
+        "_name": "transferToBankPage",
+        "selectBank": "Select Bank",
+        "amountError": "Please make sure the amount is filled and valid.",
+        "bankNotSelectedError": "Please make sure the bank is selected"
+    },
+    {
+        "_id": "transfer_confirmation_page",
+        "_name": "transferConfirmationPage",
+        "title": "Confirm Transfer",
+        "transferDetails": "Transfer Details",
+        "recipientName": "Recipient's Name",
+        "sentMessage": "Transfer initiated!"
+    }
+]

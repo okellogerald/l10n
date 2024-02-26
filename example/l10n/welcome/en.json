@@ -1,0 +1,18 @@
+{
+    "_id": "Welcome",
+    "_name": "welcome",
+    "greeting": "Hello {name}",
+    "@greeting": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "title": "Welcome",
+    "heading": "We are happy to serve you",
+    "desc": "TemboPlus is a financial service that allows you to make payments to China safely. \n\nThis service is provided by a company licensed by the Central Bank and you can make your business payments directly to Bank Accounts in China, Wechat or Alipay.",
+    "registerAndroid": "Required Steps: Log in with your Google Account & Verify Your NIN Number",
+    "registerIOS": "Required Steps: Log in with your Google or iCloud Account & Verify Your NIN Number",
+    "start": "Anza kwa kuthibitisha namba yako ya simu"
+}

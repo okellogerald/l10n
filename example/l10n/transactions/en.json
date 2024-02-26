@@ -1,0 +1,16 @@
+[
+    {
+        "_id": "Transactions",
+        "_name": "transactions",
+        "me": "Transactions",
+        "loadingMsg": "Loading transactions...",
+        "failedToLoadError": "Failed to load transactions. Please try again later.",
+        "noTransactions": "You have not done any transactions. Your recent activities will appear here.",
+        "addTransactionAction": "Send Sending Money"
+    },
+    {
+        "_id": "Transaction",
+        "_name": "transaction",
+        "me": "Transaction"
+    }
+]

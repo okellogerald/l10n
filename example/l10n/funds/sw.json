@@ -1,0 +1,39 @@
+[
+    {
+        "_id": "fund_top_up",
+        "title": "Ongeza Balance Yako",
+        "now": "Sasa Hivi",
+        "expectedArrivalTime": "Muda itakapofika",
+        "fees": "Makato",
+        "telecom": "Mtandao",
+        "confirmWithdraw": "Thibitisha Muamala",
+        "transactionType": "Aina ya Muamala"
+    },
+    {
+        "_id": "FundTopUpByPhone",
+        "title": "Kwa Namba ya Simu",
+        "phoneNumber": "Namba ya simu",
+        "getPaymentsFrom": "Weka Pesa Kupitia:",
+        "notifyCustomerDialogTitle": "Mjulishe Mteja",
+        "notifyCustomerDialogDesc": "Mjulishe mteja kwamba ataombwa kuweka PIN kwa ajili ya kuthibitisha malipo",
+        "tigoNumberHint": "Weka namba ya TIGO hapa",
+        "airtelNumberHint": "Weka namba ya AIRTEL hapa",
+        "mpesaComingSoon": "MPESA inakuja hivi karibuni",
+        "halopesaComingSoon": "HALOPESA inakuja hivi karibuni",
+        "azamPesaComingSoon": "AZAM-PESA inakuja hivi karibuni",
+        "productNameNotFilledError": "Tafadhari jaza jina la bidhaa",
+        "customerAskedForPINDesc": "Mteja ameombwa kuweka PIN ili kuthibitisha malipo. Refresh kuona kama malipo yamekamilika.",
+        "amountNotFilledError": "Hakikisha umejaza kiasi unachotaka utume",
+        "willEnablePayingThirdPartiesDesc": "Tutakuwezesha kulipa kwenda LUKU, DSTV n.k. kupitia LipaLink hivi karibuni.",
+        "unsupportedMOMOWalletError": "Hakikisha namba yako ni ya TIGO au Airtel"
+    },
+    {
+        "_id": "FundTopUpByBank",
+        "title": "Kwa Benki",
+        "bankDetails": "Taarifa za Benki",
+        "bankName": "Jina la Benki",
+        "accountNumber": "Namba ya Akaunti",
+        "accountName": "Jina la Akaunti",
+        "desc": "Unaweza kutuma pesa moja kwa moja kwenye akaunti yako ya benki kwa kutembelea benki, kutuma kutoka benki nyingine au kupitia mawakala wa EcoBank."
+    }
+]

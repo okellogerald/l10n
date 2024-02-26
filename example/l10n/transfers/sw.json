@@ -1,0 +1,23 @@
+[
+    {
+        "_id": "TransferType",
+        "me": "Aina ya Muamala",
+        "temboWallet": "Akaunti Nyingine ya Tembo",
+        "phone": "Kwenda Mtandao wa Simu",
+        "bank": "Kwenda Benki"
+    },
+    {
+        "_id": "TransferToBankPage",
+        "selectBank": "Chagua Benki",
+        "amountError": "Tafadhali hakikisha kuwa kiasi kimejazwa na ni sahihi.",
+        "bankNotSelectedError": "Tafadhali hakikisha kuwa umechagua benki"
+    },
+    {
+        "_id": "transfer_confirmation_page",
+        "title": "Thibitisha Muamala",
+        "transferDetails": "Maelezo ya Muamala",
+        "transactionTypeTemboWallet": "Akaunti Nyingine ya Tembo",
+        "recipientName": "Jina la Mpokeaji",
+        "sentMessage": "Muamala umeanzishwa!"
+    }
+]

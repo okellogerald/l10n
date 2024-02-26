@@ -1,0 +1,7 @@
+{
+  "_id": "splash_page",
+  "title": "A better way to manage your money",
+  "signInWithGoogle": "Sign In With Google",
+  "signInWithApple": "Sign In With Apple",
+  "profileFetchError": "We could not fetch your profile"
+}

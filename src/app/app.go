@@ -51,8 +51,7 @@ func JoinTranslations(settings GlobalSettings) (*MethodsData, error) {
 			isGroup := IsMethodsGroup(mainContent)
 			if isGroup {
 				id := mainContent["_id"].(string)
-				name := mainContent["_name"].(string)
-				methodGroup, err := GetMethodsGroupFrom(id, name, files...)
+				methodGroup, err := GetMethodsGroupFrom(id, files...)
 				if err != nil {
 					return nil, err
 				}

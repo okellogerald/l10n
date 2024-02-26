@@ -1,0 +1,39 @@
+[
+    {
+        "_id": "fund_top_up",
+        "title": "Top up your balance",
+        "now": "Now",
+        "expectedArrivalTime": "Expected Arrival Time",
+        "fees": "Fees",
+        "telecom": "Telecom Company",
+        "confirmWithdraw": "Confirm Transaction",
+        "transactionType": "Transaction Type"
+    },
+    {
+        "_id": "FundTopUpByPhone",
+        "title": "By Phone",
+        "phoneNumber": "Phone Number",
+        "getPaymentsFrom": "Add Money From:",
+        "notifyCustomerDialogTitle": "Notify The Customer",
+        "notifyCustomerDialogDesc": "Inform the customer that they will be asked to enter a PIN to confirm payment",
+        "tigoNumberHint": "Fill your TIGO Number here",
+        "airtelNumberHint": "Fill your AIRTEL here",
+        "mpesaComingSoon": "MPESA is coming soon",
+        "halopesaComingSoon": "HALOPESA is coming soon",
+        "azamPesaComingSoon": "AZAM-PESA Coming Soon",
+        "productNameNotFilledError": "Please provide a provide name",
+        "customerAskedForPINDesc": "The customer is asked to enter a PIN to confirm the payment. Refresh to see if the payment is complete.",
+        "amountNotFilledError": "Make sure you fill in the amount you want to send",
+        "willEnablePayingThirdPartiesDesc": "We will enable you to pay to LUKU, DSTV etc. via LipaLink soon.",
+        "unsupportedMOMOWalletError": "Make sure your phone number is a TIGO or AIRTEL number"
+    },
+    {
+        "_id": "FundTopUpByBank",
+        "title": "By Bank",
+        "bankDetails": "Bank Details",
+        "bankName": "Bank Name",
+        "accountNumber": "Account Number",
+        "accountName": "Account Name",
+        "desc": "You can send money directly to your bank account either by visiting the bank, sending from other banks or through EcoBank agents."
+    }
+]

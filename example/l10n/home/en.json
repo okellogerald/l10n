@@ -1,11 +1,22 @@
-{
-    "greeting": "Hello {name},",
-    "@greeting": {
-        "description": "A greeting",
-        "placeholders": {
-            "name": {
-                "type": "String"
-            }
-        }
+[
+    {
+        "_id": "Balance",
+        "me": "Balance",
+        "failedToLoadError": "Failed to load balance. Please try again later.",
+        "insufficientFunds": "Insufficient funds. Please top up your balance and try again.",
+        "topUpByPhoneUSSDMessage": "We have sent USSD push to complete your top up request."
+    },
+    {
+        "_id": "QuickActions",
+        "topUp": "Top Up",
+        "send": "Send Money",
+        "pay": "Pay"
+    },
+    {
+        "_id": "HomeCards",
+        "title": "Actions",
+        "requestCardAction": "Request Card",
+        "createGoalsAction": "Create Goals",
+        "earnRewardsAction": "Earn Rewards"
     }
-}
+]

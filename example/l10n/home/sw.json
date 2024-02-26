@@ -1,3 +1,22 @@
-{
-    "greeting": "Habari {name}"
-}
+[
+    {
+        "_id": "balance",
+        "me": "Salio",
+        "failedToLoadError": "Imeshindwa kupakia salio. Tafadhali jaribu tena baadaye.",
+        "insufficientFunds": "Hela hazitoshi. Tafadhali jaza salio lako na ujaribu tena.",
+        "topUpByPhoneUSSDMessage": "Tumetuma USSD push ili kukamilisha ombi lako la kuongeza."
+    },
+    {
+        "_id": "quick_actions",
+        "topUp": "Ongeza Salio",
+        "send": "Tuma Pesa",
+        "pay": "Lipa"
+    },
+    {
+        "_id": "home_cards",
+        "title": "Actions",
+        "requestCardAction": "Omba Kadi",
+        "createGoalsAction": "Tengeneza Lengo",
+        "earnRewardsAction": "Pata Zawadi"
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "_id": "request_card",
+        "me": "Omba Kadi",
+        "desc": "Pata kadi ya benki unayoweza kutumia kutoa pesa kutoka kwa ATM yoyote ya VISA, mahali popote na kufanya malipo mtandaoni.",
+        "action": "Tuma Ombi"
+    },
+    {
+        "_id": "got_your_request",
+        "desc": "Tumepokea ombi la kadi yako. Tutawasiliana nawe baada ya muda mfupi."
+    }
+]

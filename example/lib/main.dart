@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
       home: Builder(builder: (context) {
         return Scaffold(
           body: Center(
-            child: Text(AppLocalizations.of(context)!.greeting("John Smith")),
+            child: Text(AppLocalizations.of(context)!.home),
           ),
         );
       }),

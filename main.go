@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/okellogerald/l10n.git/src/app"
@@ -8,32 +9,43 @@ import (
 )
 
 func main() {
-	data, err := app.JoinTranslations()
+	dir, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.RemoveAll(app.LocalizationsDir)
+	settings := app.GlobalSettings {
+        FlutterProjectDir:   dir,
+		LocalizationsDir: fmt.Sprintf("%v/l10n", dir),
+        LocalizationsOutDir:   fmt.Sprintf("%v/lib/localizations/", dir),
+	}
+
+	data, err := app.JoinTranslations(settings)
 	if err != nil {
 		panic(err)
 	}
 
-	err = flutter.GenerateLocalizationFiles(*data)
+	err = os.RemoveAll(settings.LocalizationsDir)
 	if err != nil {
 		panic(err)
 	}
 
-	err = flutter.PubGet()
+	err = flutter.GenerateLocalizationFiles(settings, *data)
 	if err != nil {
 		panic(err)
 	}
 
-	err = flutter.Format()
+	err = flutter.PubGet(settings)
 	if err != nil {
 		panic(err)
 	}
 
-	err = flutter.ApplyFixes()
+	err = flutter.Format(settings)
+	if err != nil {
+		panic(err)
+	}
+
+	err = flutter.ApplyFixes(settings)
 	if err != nil {
 		panic(err)
 	}

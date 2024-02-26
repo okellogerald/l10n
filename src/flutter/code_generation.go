@@ -13,12 +13,12 @@ import (
 	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
 )
 
-func GenerateLocalizationFiles(data app.MethodsData) error {
-	err := os.Mkdir(app.LocalizationsDir, 0755)
+func GenerateLocalizationFiles(settings app.GlobalSettings, data app.MethodsData) error {
+	err := os.Mkdir(settings.LocalizationsDir, 0755)
 	if err != nil {
 		return err
 	}
-	file, err := os.Create(fmt.Sprintf("%v/app_localizations.dart", app.LocalizationsDir))
+	file, err := os.Create(fmt.Sprintf("%v/app_localizations.dart", settings.LocalizationsDir))
 	if err != nil {
 		return err
 	}
@@ -139,7 +139,7 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 		return err
 	}
 
-	err = generateSpecificLocaleFiles(data)
+	err = generateSpecificLocaleFiles(settings, data)
 	if err != nil {
 		return err
 	}
@@ -149,10 +149,10 @@ func GenerateLocalizationFiles(data app.MethodsData) error {
 	return nil
 }
 
-func generateSpecificLocaleFiles(data app.MethodsData) error {
+func generateSpecificLocaleFiles(settings app.GlobalSettings, data app.MethodsData) error {
 	for i := 0; i < len(app.Locales); i++ {
 		locale := app.Locales[i]
-		dir := app.LocalizationsDir
+		dir := settings.LocalizationsDir
 		file, err := os.Create(fmt.Sprintf("%v/app_localizations_%v.dart", dir, locale))
 		if err != nil {
 			return err

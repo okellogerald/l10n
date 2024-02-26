@@ -8,10 +8,10 @@ import (
 	"github.com/okellogerald/l10n.git/src/app"
 )
 
-func PubGet() error {
+func PubGet(settings app.GlobalSettings) error {
 	println("-----attempting to run flutter pub get-----")
 	cmd := exec.Command("flutter", "pub", "get")
-	cmd.Dir = app.FlutterProjectDir
+	cmd.Dir = settings.FlutterProjectDir
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -25,10 +25,10 @@ func PubGet() error {
 	return nil
 }
 
-func Format() error {
+func Format(settings app.GlobalSettings) error {
 	println("-----attempting to run dart format-----")
-	cmd := exec.Command("dart", "format", app.LocalizationsDir)
-	cmd.Dir = app.FlutterProjectDir
+	cmd := exec.Command("dart", "format", settings.LocalizationsDir)
+	cmd.Dir = settings.FlutterProjectDir
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -42,10 +42,10 @@ func Format() error {
 	return nil
 }
 
-func ApplyFixes() error {
+func ApplyFixes(settings app.GlobalSettings) error {
 	println("-----attempting to run dart fix-----")
 	cmd := exec.Command("dart", "fix", "--apply")
-	cmd.Dir = app.FlutterProjectDir
+	cmd.Dir = settings.FlutterProjectDir
 
 	var out bytes.Buffer
 	cmd.Stdout = &out

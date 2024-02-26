@@ -11,12 +11,8 @@ If [this issue](https://github.com/flutter/flutter/issues/107157) is resolved, t
    Also make sure that the l10n.yaml file is deleted, because its presence will prompt generating the localization files with the flutter_localizations package.
 
 ## Getting Started
-1. Create translation folders. They should all be in the same folder.
-   Example:
-        profile_page
-            en.json
-            ru.json
-2. Go into `src/app/globals.go` and change the constants there to match your projects details
-3. Then run the program with the command `go run .`. It should generate all the localization files you need, just as `flutter_localizations` does it and more.
+1. Run `go build -o {name_of_the_executable e.g locgen}`
+2. Run `mv locgen /usr/local/bin`
+3. Run `locgen` at the root of your flutter project
 
 The `example/` folder may be helpful.

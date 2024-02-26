@@ -8,8 +8,8 @@ import (
 	list "github.com/okellogerald/l10n.git/src/utils/list_utils"
 )
 
-func JoinTranslations() (*MethodsData, error) {
-	folders, err := getAllFoldersFrom(FROM)
+func JoinTranslations(settings GlobalSettings) (*MethodsData, error) {
+	folders, err := getAllFoldersFrom(settings.LocalizationsDir)
 	if err != nil {
 		return nil, err
 	}

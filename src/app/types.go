@@ -1,5 +1,7 @@
 package app
 
+import "github.com/iancoleman/strcase"
+
 type Locale = string
 
 type Content map[string]interface{}
@@ -17,12 +19,24 @@ type Method struct {
 	Translations []string
 }
 
+func (g Method) GetMethodName() string {
+	return strcase.ToLowerCamel(g.Name)
+}
+
+// Independent classes will be created out of this struct
 type MethodGroup struct {
 	// Will be the class name for the generated class
 	Identifier string
-	// Will be the method name in the app_localization file
-	Name       string
-	Methods    []Method
+
+	Methods []Method
+}
+
+func (g MethodGroup) GetGroupClassName() string {
+	return strcase.ToCamel(g.Identifier)
+}
+
+func (g MethodGroup) GetGroupMethodName() string {
+	return strcase.ToLowerCamel(g.Identifier)
 }
 
 type MethodsData struct {

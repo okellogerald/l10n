@@ -1,12 +1,10 @@
 [
     {
-        "_id": "ProfilePage",
-        "_name": "profilePage",
+        "_id": "profile_page",
         "hello": "Hello"
     },
     {
-        "_id": "ProfileEditPage",
-        "_name": "profileEditPage",
+        "_id": "profile_edit_page",
         "edit": "Edit Profile"
     }
 ]

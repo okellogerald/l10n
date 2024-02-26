@@ -14,6 +14,8 @@ func main() {
 		panic(err)
 	}
 
+	// dir := "/Users/mac/Downloads/Programs/personal/l10n/example/"
+
 	settings := app.GlobalSettings{
 		FlutterProjectDir: dir,
 		From:              fmt.Sprintf("%v/l10n", dir),

@@ -15,12 +15,7 @@ func IsMethodsGroup(data map[string]interface{}) bool {
 		return ok
 	}
 
-	name, ok := data["_name"].(string)
-	if !ok {
-		return ok
-	}
-
-	if len(identifier) == 0 || len(name) == 0 {
+	if len(identifier) == 0 {
 		return false
 	}
 
@@ -34,7 +29,6 @@ func GetMethodsGroupFrom(identifier string, name string, files ...string) (*Meth
 	}
 	group := MethodGroup{
 		Identifier: identifier,
-		Name:       name,
 		Methods:    methods,
 	}
 	return &group, nil
@@ -182,7 +176,6 @@ func GetMethodsGroupsFrom(files ...string) ([]MethodGroup, error) {
 		isGroup := IsMethodsGroup(item)
 		if isGroup {
 			id := item["_id"].(string)
-			name := item["_name"].(string)
 			methods := make([]partialMethod, 0)
 
 			for k := range item {
@@ -227,7 +220,6 @@ func GetMethodsGroupsFrom(files ...string) ([]MethodGroup, error) {
 
 			group := partialGroup{
 				id:      id,
-				name:    name,
 				methods: methods,
 			}
 			partialGroups = append(partialGroups, group)
@@ -305,7 +297,6 @@ func GetMethodsGroupsFrom(files ...string) ([]MethodGroup, error) {
 
 		group := MethodGroup{
 			Identifier: g.id,
-			Name:       g.name,
 			Methods:    methods,
 		}
 		groups = append(groups, group)
